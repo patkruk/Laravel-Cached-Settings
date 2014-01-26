@@ -44,7 +44,7 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 			return new DatabaseHandler(
 					$app->make('db'),
 					$app['config']->getEnvironment(),
-					$app['config']->get('laravel-cached-settings::prefix')
+					$app['config']->get('laravel-cached-settings::tableName')
 			);
 		});
 

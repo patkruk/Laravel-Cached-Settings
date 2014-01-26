@@ -20,7 +20,7 @@ return array(
     | A value that prefixes all package's keys in the caching system.
     |
     */
-    'prefix' => 'cachedset',
+    'prefix' => 'settings',
 
     /*
     |--------------------------------------------------------------------------

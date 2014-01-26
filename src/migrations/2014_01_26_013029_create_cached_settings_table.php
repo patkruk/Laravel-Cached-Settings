@@ -23,7 +23,7 @@ class CreateCachedSettingsTable extends Migration
 			$table->integer('updated_timestamp')->unsigned();
 
 			// index
-			$table->index(array('environment', 'key'));
+			$table->unique(array('environment', 'key'));
 		});
 	}
 
