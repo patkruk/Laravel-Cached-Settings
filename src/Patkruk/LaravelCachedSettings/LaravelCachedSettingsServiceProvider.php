@@ -1,4 +1,6 @@
-<?php namespace Patkruk\LaravelCachedSettings;
+<?php
+
+namespace Patkruk\LaravelCachedSettings;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -28,7 +30,28 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app['cachedSettings.cacheHandler'] = $this->app->share(function($app)
+		{
+			return new CacheHandler(
+					$app->make('cache'),
+					$app['config']->getEnvironment(),
+					$app['config']->get('laravel-cached-settings::prefix')
+			);
+		});
+
+		$this->app['cachedSettings.persistentHandler'] = $this->app->share(function($app)
+		{
+			return new DatabaseHandler(
+					$app->make('db'),
+					$app['config']->getEnvironment(),
+					$app['config']->get('laravel-cached-settings::prefix')
+			);
+		});
+
+		$this->app['cachedsettings'] = $this->app->share(function($app)
+		{
+			return new LaravelCachedSettings($app);
+		});
 	}
 
 	/**
@@ -38,7 +61,7 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('cachedSettings.cacheHandler', 'cachedSettings.persistentHandler', 'cachedsettings');
 	}
 
 }
