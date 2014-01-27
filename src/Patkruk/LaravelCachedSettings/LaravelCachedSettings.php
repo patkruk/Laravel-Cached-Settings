@@ -121,7 +121,7 @@ class LaravelCachedSettings
     }
 
     /**
-     * Deletes all setting for the current environment.
+     * Deletes all settings for the current environment.
      *
      * @return boolean
      */

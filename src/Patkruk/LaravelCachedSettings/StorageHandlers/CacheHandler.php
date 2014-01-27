@@ -34,6 +34,12 @@ class CacheHandler implements CacheHandlerInterface
     protected $prefix;
 
     /**
+     * Locally cached settings
+     * @var array
+     */
+    protected $settings = array();
+
+    /**
      * Class constructor method.
      *
      * @param   CacheManager $cache
@@ -57,6 +63,9 @@ class CacheHandler implements CacheHandlerInterface
      */
     public function set($key, $value)
     {
+        // update the local cache
+        $this->settings[$key] = $value;
+
         $this->cache->put($this->key($key), $value, 0);
     }
 
@@ -68,7 +77,10 @@ class CacheHandler implements CacheHandlerInterface
      */
     public function get($key)
     {
-        return (string) $this->cache->get($this->key($key));
+        // if the key is cached locally, no need to hit the caching layer
+        if (isset($this->settings[$key])) return $this->settings[$key];
+
+        return (string) $this->settings[$key] = $this->cache->get($this->key($key));
     }
 
     /**
@@ -79,6 +91,9 @@ class CacheHandler implements CacheHandlerInterface
      */
     public function delete($key)
     {
+        // erase the local cache
+        unset($this->settings[$key]);
+
         $this->cache->forget($this->key($key));
     }
 

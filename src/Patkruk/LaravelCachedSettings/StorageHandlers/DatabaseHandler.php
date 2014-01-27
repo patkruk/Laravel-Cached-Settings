@@ -39,6 +39,12 @@ class DatabaseHandler implements PersistentHandlerInterface
     protected $tableName;
 
     /**
+     * Locally cached settings
+     * @var array
+     */
+    protected $settings = array();
+
+    /**
      * Class constructor method.
      *
      * @param   DatabaseManager $db
@@ -64,6 +70,7 @@ class DatabaseHandler implements PersistentHandlerInterface
         return $this->db->table($this->tableName)
                         ->where('environment', '=', $this->env)
                         ->where('key', '=', (string) $key)
+                        ->take(1)
                         ->first();
     }
 
