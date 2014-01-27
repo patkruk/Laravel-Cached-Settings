@@ -1,6 +1,8 @@
 {
     "name": "patkruk/laravel-cached-settings",
-    "description": "",
+    "description": "A simple cached config container for Laravel 4",
+    "version": "1.0.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "Patryk Kruk",

@@ -17,6 +17,7 @@ use \Illuminate\Foundation\Application;
  *
  * @author  Patryk Kruk <patkruk@gmail.com>
  * @package Patkruk\LaravelCachedSettings
+ * @copyright  Copyright (c) 2014
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
  */
 class LaravelCachedSettings
