@@ -1,6 +1,12 @@
-<?php namespace Patkruk\LaravelCachedSettings;
+<?php
+
+namespace Patkruk\LaravelCachedSettings;
 
 use Illuminate\Support\ServiceProvider;
+use Patkruk\LaravelCachedSettings\Commands\CachedSettingsSet;
+use Patkruk\LaravelCachedSettings\Commands\CachedSettingsGet;
+use Patkruk\LaravelCachedSettings\Commands\CachedSettingsRefreshAll;
+use Patkruk\LaravelCachedSettings\Commands\CachedSettingsDeleteAll;
 
 class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 
@@ -28,7 +34,62 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		// register the cache handler
+		$this->app['cachedSettings.cacheHandler'] = $this->app->share(function($app)
+		{
+			return new CacheHandler(
+					$app->make('cache'),
+					$app['config']->getEnvironment(),
+					$app['config']->get('laravel-cached-settings::prefix')
+			);
+		});
+
+		// register the persistent storage handler
+		$this->app['cachedSettings.persistentHandler'] = $this->app->share(function($app)
+		{
+			return new DatabaseHandler(
+					$app->make('db'),
+					$app['config']->getEnvironment(),
+					$app['config']->get('laravel-cached-settings::tableName')
+			);
+		});
+
+		// register the cached settings controller
+		$this->app['cachedsettings'] = $this->app->share(function($app)
+		{
+			return new LaravelCachedSettings($app);
+		});
+
+		// register the cachedsettings:set command
+		$this->app['command.cachedsettings.set'] = $this->app->share(function($app)
+		{
+			return new CachedSettingsSet($app->make('cachedsettings'));
+		});
+
+		// register the cachedsettings:get command
+		$this->app['command.cachedsettings.get'] = $this->app->share(function($app)
+		{
+			return new CachedSettingsGet($app->make('cachedsettings'));
+		});
+
+		// register the cachedsettings:refresh-all command
+		$this->app['command.cachedsettings.refreshAll'] = $this->app->share(function($app)
+		{
+			return new CachedSettingsRefreshAll($app->make('cachedsettings'));
+		});
+
+		// register the cachedsettings:delete-all command
+		$this->app['command.cachedsettings.deleteAll'] = $this->app->share(function($app)
+		{
+			return new CachedSettingsDeleteAll($app->make('cachedsettings'));
+		});
+
+		$this->commands(
+			'command.cachedsettings.set',
+			'command.cachedsettings.get',
+			'command.cachedsettings.refreshAll',
+			'command.cachedsettings.deleteAll'
+		);
 	}
 
 	/**
@@ -38,7 +99,7 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('cachedSettings.cacheHandler', 'cachedSettings.persistentHandler', 'cachedsettings');
 	}
 
 }
