@@ -2,7 +2,8 @@
 
 namespace Patkruk\LaravelCachedSettings;
 
-use \Illuminate\Foundation\Application;
+use Patkruk\LaravelCachedSettings\Interfaces\CacheHandlerInterface;
+use Patkruk\LaravelCachedSettings\Interfaces\PersistentHandlerInterface;
 
 /**
  * LaravelCachedSettings Class.
@@ -22,11 +23,6 @@ use \Illuminate\Foundation\Application;
  */
 class LaravelCachedSettings
 {
-    /**
-     * @var \Illuminate\Foundation\Application
-     */
-    protected $app;
-
     /**
      * Application environment
      * @var string
@@ -48,20 +44,20 @@ class LaravelCachedSettings
     /**
      * Class constructor method.
      *
-     * @param Application $app
+     * @param string                     $env
+     * @param string                     $cacheEnabled
+     * @param CacheHandlerInterface      $cacheHandler
+     * @param PersistentHandlerInterface $persistentHandler
      */
-    public function __construct(Application $app)
+    public function __construct($env, $cacheEnabled, CacheHandlerInterface $cacheHandler, PersistentHandlerInterface $persistentHandler)
     {
-        $this->app = $app;
+        $this->env = $env;
 
-        // get environment
-        $this->env = $app['config']->getEnvironment();
-
-        if ($app['config']['laravel-cached-settings::cache'] == true) {
-            $this->cacheHandler = $app->make('cachedSettings.cacheHandler');
+        if ($cacheEnabled === true) {
+            $this->cacheHandler = $cacheHandler;
         }
 
-        $this->persistentHandler = $app->make('cachedSettings.persistentHandler');
+        $this->persistentHandler = $persistentHandler;
     }
 
     /**

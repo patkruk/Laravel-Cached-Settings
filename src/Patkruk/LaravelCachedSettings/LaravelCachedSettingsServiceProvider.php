@@ -57,7 +57,12 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 		// register the cached settings controller
 		$this->app['cachedsettings'] = $this->app->share(function($app)
 		{
-			return new LaravelCachedSettings($app);
+			return new LaravelCachedSettings(
+				$app['config']->getEnvironment(), // current environment
+				$app['config']['laravel-cached-settings::cache'], // package config cache flag
+				$app->make('cachedSettings.cacheHandler'),
+				$app->make('cachedSettings.persistentHandler')
+			);
 		});
 
 		// register the cachedsettings:set command
