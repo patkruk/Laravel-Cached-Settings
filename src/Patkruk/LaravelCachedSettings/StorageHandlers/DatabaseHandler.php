@@ -1,6 +1,6 @@
 <?php
 
-namespace Patkruk\LaravelCachedSettings;
+namespace Patkruk\LaravelCachedSettings\StorageHandlers;
 
 use Illuminate\Database\DatabaseManager;
 use Patkruk\LaravelCachedSettings\Interfaces\PersistentHandlerInterface;

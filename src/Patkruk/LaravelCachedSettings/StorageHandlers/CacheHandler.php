@@ -1,6 +1,6 @@
 <?php
 
-namespace Patkruk\LaravelCachedSettings;
+namespace Patkruk\LaravelCachedSettings\StorageHandlers;
 
 use Illuminate\Cache\CacheManager;
 use Patkruk\LaravelCachedSettings\Interfaces\CacheHandlerInterface;
