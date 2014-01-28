@@ -3,6 +3,8 @@
 namespace Patkruk\LaravelCachedSettings;
 
 use Illuminate\Support\ServiceProvider;
+use Patkruk\LaravelCachedSettings\StorageHandlers\CacheHandler;
+use Patkruk\LaravelCachedSettings\StorageHandlers\DatabaseHandler;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsSet;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsGet;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsRefreshAll;

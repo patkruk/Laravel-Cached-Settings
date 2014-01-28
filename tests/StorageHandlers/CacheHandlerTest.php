@@ -1,6 +1,6 @@
 <?php
 
-use Patkruk\LaravelCachedSettings\CacheHandler;
+use Patkruk\LaravelCachedSettings\StorageHandlers\CacheHandler;
 use Illuminate\Cache\CacheManager;
 
 class CacheHandlerTest extends PHPUnit_Framework_TestCase
