@@ -84,6 +84,7 @@ class DatabaseHandler implements PersistentHandlerInterface
     {
         return $this->db->table($this->tableName)
                         ->where('environment', '=', $this->env)
+                        ->orderBy('key', 'asc')
                         ->get();
     }
 
@@ -182,6 +183,7 @@ class DatabaseHandler implements PersistentHandlerInterface
     {
         return $this->db->table($this->tableName)
                         ->where('environment', '=', $this->env)
+                        ->orderBy('key', 'asc')
                         ->lists('key');
     }
 }

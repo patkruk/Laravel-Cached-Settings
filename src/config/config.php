@@ -17,7 +17,7 @@ return array(
     | Cache Prefix
     |--------------------------------------------------------------------------
     |
-    | A value that prefixes all package's keys in the caching system.
+    | A value that prefixes all keys in the caching system.
     |
     */
     'prefix' => 'settings',
@@ -27,7 +27,7 @@ return array(
     | Database table name.
     |--------------------------------------------------------------------------
     |
-    |
+    | The name of the table in the database where settings are stored.
     |
     */
     'tableName' => 'settings',
