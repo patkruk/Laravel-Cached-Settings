@@ -18,7 +18,7 @@ class CreateCachedSettingsTable extends Migration
 		{
 			$table->increments('id');
 			$table->string('environment', 20);
-			$table->string('key', 500);
+			$table->string('key', 255);
 			$table->text('value')->nullable();
 			$table->integer('updated_timestamp')->unsigned()->nullable();
 
