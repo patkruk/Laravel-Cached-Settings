@@ -106,7 +106,7 @@ class CacheHandler implements CacheHandlerInterface
      */
     public function has($key)
     {
-        return $this->cache->has($this->key($key));
+        return (bool) $this->cache->has($this->key($key));
     }
 
     /**
@@ -117,6 +117,6 @@ class CacheHandler implements CacheHandlerInterface
      */
     protected function key($key)
     {
-        return (string) $this->prefix . '-' . (string) $this->env . '' . (string) $key;
+        return (string) $this->prefix . '-' . (string) $this->env . (string) $key;
     }
 }

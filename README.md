@@ -1,0 +1,196 @@
+Laravel Cached Settings
+=============
+[![Build Status](https://travis-ci.org/patkruk/Laravel-Cached-Settings.png?branch=master)]
+
+Provides a basic container for your configuration parameters and settings.
+
+Key-value pairs are stored in your database and, if cache is enabled in the package configuration file, also in your caching system. When you try to retrieve a value from the container, the caching system is always checked first and if the value exists, the database layer is never touched. In case the value is not in your cache, it's retrieved from the persistent storage and also automatically added to the caching layer.
+
+The package uses the current environment name to oraganize settings in order to allow you have different values based on the environment the application is running in. Therefore, a value added while in "local", won't be available in "production" or "testing".
+
+Instalation
+===========
+
+Add laravel-cached-settings to your composer.json file:
+
+```
+"require": {
+  "patkruk/laravel-cached-settings": "1.0.*"
+}
+```
+
+Use composer to install this package.
+
+```
+$ composer update
+```
+
+Create configuration file using artisan
+
+```
+$ php artisan config:publish patkruk/laravel-cached-settings
+```
+
+## Configuration
+
+### Registering the Package
+
+Add an alias to the bottom of app/config/app.php
+
+```php
+'CachedSettings' => 'Patkruk\LaravelCachedSettings\Facades\CachedSettings',
+```
+
+and register this service provider at the bottom of the `$providers` array:
+
+```php
+'Patkruk\LaravelCachedSettings\LaravelCachedSettingsServiceProvider',
+```
+
+### Running Migrations
+
+```
+$ php artisan migrate --package=patkruk/laravel-cached-settings
+```
+
+You can specify the table name in the published package config file.
+
+## Usage
+
+### Adding a new setting:
+
+
+```php
+CachedSettings::set('datetime_format', 'Y-m-d H-i-s');
+```
+
+You can "dot" notation to imitate a multi-dimensional array:
+
+```php
+CachedSettings::set('email.admin', 'admin@example.com');
+CachedSettings::set('email.editor', 'editor@example.com');
+```
+
+### Retrieving a setting:
+
+```php
+CachedSettings::get('datetime_format');
+CachedSettings::get('email.editor');
+```
+
+### Checking if a setting exists:
+
+```php
+CachedSettings::has('email.admin');
+```
+
+It checks the persistent storage and returns a boolean.
+
+
+### Updating a setting:
+
+```php
+CachedSettings::set('email.admin', 'administrator@example.com');
+```
+
+### Deleting a setting:
+
+```php
+CachedSettings::delete('email.admin');
+```
+
+This command removes a setting from the caching and persistent storages!
+
+### Deleting all settings:
+
+```php
+CachedSettings::deleteAll();
+```
+
+This command removes all settings from the caching and persistent storages!
+
+### Refreshing a setting in cache:
+
+If you have changed the value directly in the database or just want to make sure that your cache is up-to-date,
+you can refresh individual settings.
+
+```php
+CachedSettings::refresh('email.admin');
+```
+
+The value in the cache is updated with the one in the database.
+
+### Refreshing all settings in cache:
+
+You can update you cache with the values from the database with just one command.
+
+```php
+CachedSettings::refreshAll();
+```
+
+The value in the cache is updated with the one in the database.
+
+### Getting a list of all keys:
+
+```php
+CachedSettings::getKeys();
+```
+
+This command returns an array of all keys (setting names) currently stored in the database.
+
+### Getting all settings:
+
+```php
+CachedSettings::getAll();
+```
+
+This command returns an array of all settings (key-value objects).
+
+## Artisan Commands
+
+The packages provides 4 different artisan commands for convenience:
+
+### Setting a parameter:
+
+```
+$ php artisan cached-settings:set email.admin admin@example.com
+```
+
+Or just answer two questions:
+
+```
+$ php artisan cached-settings:set
+```
+
+You can always specify the environment:
+
+```
+$ php artisan cached-settings:set email.admin admin@example.com --env=production
+```
+### Returning a parameter:
+
+```
+$ php artisan cached-settings:get email.admin
+```
+
+Or just answer a qustion:
+
+```
+$ php artisan cached-settings:get
+```
+
+### Refreshing all parameters in cache:
+
+```
+$ php artisan cached-settings:refresh-all
+```
+
+### Deleting all parameters (cache and database):
+
+```
+$ php artisan cached-settings:delete-all
+```
+
+## License
+
+Laravel Setting is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
