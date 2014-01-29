@@ -15,7 +15,7 @@ Add the package to your composer.json file:
 
 ```
 "require": {
-  "patkruk/laravel-cached-settings": "1.0.*"
+  "patkruk/laravel-cached-settings": "dev-master"
 }
 ```
 
