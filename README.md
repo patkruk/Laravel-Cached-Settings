@@ -1,6 +1,6 @@
 Laravel Cached Settings
 =============
-[Build Status](https://travis-ci.org/patkruk/Laravel-Cached-Settings.png?branch=master)
+[![Build Status](https://travis-ci.org/patkruk/Laravel-Cached-Settings.png?branch=master)]
 
 Provides a basic container for your configuration parameters and settings.
 
