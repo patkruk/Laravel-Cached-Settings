@@ -9,6 +9,8 @@ use Patkruk\LaravelCachedSettings\Commands\CachedSettingsSet;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsGet;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsRefreshAll;
 use Patkruk\LaravelCachedSettings\Commands\CachedSettingsDeleteAll;
+use Patkruk\LaravelCachedSettings\Commands\CachedSettingsImportFile;
+use Patkruk\LaravelCachedSettings\Helpers\FileSystemOperations;
 
 class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 
@@ -60,10 +62,11 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 		$this->app['cachedsettings'] = $this->app->share(function($app)
 		{
 			return new LaravelCachedSettings(
-				$app['config']->getEnvironment(), // current environment
-				$app['config']['laravel-cached-settings::cache'], // package config cache flag
+				$app['config']->getEnvironment(), 					// current environment
+				$app['config']['laravel-cached-settings::cache'], 	// package config cache flag
 				$app->make('cachedSettings.cacheHandler'),
-				$app->make('cachedSettings.persistentHandler')
+				$app->make('cachedSettings.persistentHandler'),
+				new FileSystemOperations()
 			);
 		});
 
@@ -91,11 +94,18 @@ class LaravelCachedSettingsServiceProvider extends ServiceProvider {
 			return new CachedSettingsDeleteAll($app->make('cachedsettings'));
 		});
 
+		// register the cachedsettings:import-file command
+		$this->app['command.cachedsettings.importFile'] = $this->app->share(function($app)
+		{
+			return new CachedSettingsImportFile($app->make('cachedsettings'));
+		});
+
 		$this->commands(
 			'command.cachedsettings.set',
 			'command.cachedsettings.get',
 			'command.cachedsettings.refreshAll',
-			'command.cachedsettings.deleteAll'
+			'command.cachedsettings.deleteAll',
+			'command.cachedsettings.importFile'
 		);
 	}
 

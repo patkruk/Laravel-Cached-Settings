@@ -8,6 +8,8 @@ Key-value pairs are stored in your database and, if cache is enabled in the pack
 
 The package uses the current environment name to oraganize settings in order to allow you have different values based on the environment the application is running in. Therefore, a value added while in "local", won't be available in "production" or "testing".
 
+One of the artisan commands the package offers, allows you to import a json file into the persistant storage system. See below for more info.
+
 Instalation
 ===========
 
@@ -146,7 +148,7 @@ This command returns an array of all settings (key-value objects).
 
 ## Artisan Commands
 
-The packages provides 4 different artisan commands for your convenience:
+The packages provides 5 different artisan commands for your convenience:
 
 ### Setting a parameter:
 
@@ -187,6 +189,30 @@ $ php artisan cached-settings:refresh-all
 
 ```
 $ php artisan cached-settings:delete-all
+```
+
+### Importing a JSON file:
+
+```
+$ php artisan cached-settings:import-file /home/vagrant/import_data.json
+```
+
+This command allows you to import a file with a JSON object which has string or number fields only. Example:
+
+```
+{
+    "email.admin": "admin@example.com",
+    "email.editor": "editor@example.com",
+    "email.send": "false",
+    "security.min_password_length": 15
+}
+```
+You need to provide it with the full path to your file.
+
+As always, you can specify the environment by using the "env" option:
+
+```
+$ php artisan cached-settings:import-file /home/vagrant/import_data.json --env=production
 ```
 
 ## License

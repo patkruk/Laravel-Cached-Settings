@@ -3,6 +3,7 @@
 use Patkruk\LaravelCachedSettings\LaravelCachedSettings;
 use Patkruk\LaravelCachedSettings\Interfaces\CacheHandlerInterface;
 use Patkruk\LaravelCachedSettings\Interfaces\PersistentHandlerInterface;
+use Patkruk\LaravelCachedSettings\Helpers\FileSystemOperations;
 
 class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
 {
@@ -16,6 +17,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
 
     protected $storedSetting;
 
+    protected $fileSystemOperations;
+
     public function tearDown()
     {
         Mockery::close();
@@ -25,6 +28,7 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
     {
         $this->cacheHandler = Mockery::mock('Patkruk\LaravelCachedSettings\Interfaces\CacheHandlerInterface');
         $this->persistentHandler = Mockery::mock('Patkruk\LaravelCachedSettings\Interfaces\PersistentHandlerInterface');
+        $this->fileSystemOperations = Mockery::mock('Patkruk\LaravelCachedSettings\Helpers\FileSystemOperations');
 
         $this->storedSetting = Mockery::mock('storedSetting');
 
@@ -32,7 +36,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
                         'local',
                         true,
                         $this->cacheHandler,
-                        $this->persistentHandler
+                        $this->persistentHandler,
+                        $this->fileSystemOperations
         );
     }
 
@@ -68,7 +73,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
                         'local',
                         false,
                         $this->cacheHandler,
-                        $this->persistentHandler
+                        $this->persistentHandler,
+                        $this->fileSystemOperations
         );
 
         $this->persistentHandler->shouldReceive('update')
@@ -142,7 +148,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
                         'local',
                         false,
                         $this->cacheHandler,
-                        $this->persistentHandler
+                        $this->persistentHandler,
+                        $this->fileSystemOperations
         );
 
         $this->persistentHandler->shouldReceive('get')
@@ -273,7 +280,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
                         'local',
                         false,
                         $this->cacheHandler,
-                        $this->persistentHandler
+                        $this->persistentHandler,
+                        $this->fileSystemOperations
         );
 
         $this->persistentHandler->shouldReceive('get')
@@ -306,7 +314,8 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
                         'local',
                         false,
                         $this->cacheHandler,
-                        $this->persistentHandler
+                        $this->persistentHandler,
+                        $this->fileSystemOperations
         );
 
         $result = $this->cachedSettings->refreshAll();
@@ -343,5 +352,48 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
         $result = $this->cachedSettings->refreshAll();
 
         $this->assertTrue($result);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The file does not exist or is not readable.
+     */
+    public function testImportFileThrowsExceptionIfFileNotReadableOrDoesntExist()
+    {
+        $file = '/home/user/import.json';
+
+        $this->fileSystemOperations->shouldReceive('isReadable')->with($file)->once()->andReturn(false);
+
+        $this->cachedSettings->importFile($file);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Problem reading the file.
+     */
+    public function testImportFileThrowsExceptionIfCannotReadFileContent()
+    {
+        $file = '/home/user/import.json';
+
+        $this->fileSystemOperations->shouldReceive('isReadable')->with($file)->once()->andReturn(true);
+        $this->fileSystemOperations->shouldReceive('readFile')->with($file)->once()->andReturn(false);
+
+        $this->cachedSettings->importFile($file);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Invalid JSON.
+     */
+    public function testImportFileThrowsExceptionIfCannotDecodeJSON()
+    {
+        $file = '/home/user/import.json';
+        $json = '{{"email.admin": "admin@example.com","email.editor": "editor@example.com","email.send": "false"}}';
+
+        $this->fileSystemOperations->shouldReceive('isReadable')->with($file)->once()->andReturn(true);
+        $this->fileSystemOperations->shouldReceive('readFile')->with($file)->once()->andReturn($json);
+        $this->fileSystemOperations->shouldReceive('decodeJson')->with($json)->once()->andReturn(NULL);
+
+        $this->cachedSettings->importFile($file);
     }
 }
