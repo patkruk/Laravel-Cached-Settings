@@ -4,6 +4,7 @@ namespace Patkruk\LaravelCachedSettings;
 
 use Patkruk\LaravelCachedSettings\Interfaces\CacheHandlerInterface;
 use Patkruk\LaravelCachedSettings\Interfaces\PersistentHandlerInterface;
+use Patkruk\LaravelCachedSettings\Helpers\FileSystemOperations;
 
 /**
  * LaravelCachedSettings Class.
@@ -42,14 +43,25 @@ class LaravelCachedSettings
     protected $persistentHandler;
 
     /**
+     * @var Patkruk\LaravelCachedSettings\Helpers\FileSystemOperations
+     */
+    protected $fileSystemOperations;
+
+    /**
      * Class constructor method.
      *
      * @param string                     $env
      * @param string                     $cacheEnabled
      * @param CacheHandlerInterface      $cacheHandler
      * @param PersistentHandlerInterface $persistentHandler
+     * @param FileSystemOperations       $fileSystemOperations
      */
-    public function __construct($env, $cacheEnabled, CacheHandlerInterface $cacheHandler, PersistentHandlerInterface $persistentHandler)
+    public function __construct(
+        $env,
+        $cacheEnabled,
+        CacheHandlerInterface $cacheHandler,
+        PersistentHandlerInterface $persistentHandler,
+        FileSystemOperations $fileSystemOperations)
     {
         $this->env = $env;
 
@@ -58,6 +70,8 @@ class LaravelCachedSettings
         }
 
         $this->persistentHandler = $persistentHandler;
+
+        $this->fileSystemOperations = $fileSystemOperations;
     }
 
     /**
@@ -211,5 +225,40 @@ class LaravelCachedSettings
     public function getAll()
     {
         return (array) $this->persistentHandler->getAll();
+    }
+
+    /**
+     * Reads a JSON file and imports its content into the database
+     * and cache.
+     *
+     * @param  string $filePath Full path
+     * @return boolean
+     */
+    public function importFile($filePath)
+    {
+        $result = true;
+
+        // check if file is readable
+        if (! $this->fileSystemOperations->isReadable($filePath)) {
+            throw new \Exception('The file does not exist or is not readable.');
+        }
+
+        $fileJson = $this->fileSystemOperations->readFile($filePath);
+        if ($fileJson === false) {
+            throw new \Exception('Problem reading the file.');
+        }
+
+        $file = $this->fileSystemOperations->decodeJson($fileJson);
+        if ($file === NULL) {
+            throw new \Exception('Invalid JSON.');
+        }
+
+        foreach ($file as $key => $value) {
+            $success = $this->set($key, $value);
+
+            if (! $success) $result = false;
+        }
+
+        return $result;
     }
 }
