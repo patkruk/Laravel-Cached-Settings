@@ -8,7 +8,7 @@ Key-value pairs are stored in your database and, if cache is enabled in the pack
 
 The package uses the current environment name to oraganize settings in order to allow you have different values based on the environment the application is running in. Therefore, a value added while in "local", won't be available in "production" or "testing".
 
-One of the artisan commands the package offers, allows you to import a json file with into the persistant storage system. See below for more info.
+One of the artisan commands the package offers, allows you to import a json file into the persistant storage system. See below for more info.
 
 Instalation
 ===========
