@@ -207,8 +207,6 @@ This command allows you to import a file with a JSON object which has string or 
     "security.min_password_length": 15
 }
 ```
-You need to provide it with the full path to your file.
-
 As always, you can specify the environment by using the "env" option:
 
 ```
