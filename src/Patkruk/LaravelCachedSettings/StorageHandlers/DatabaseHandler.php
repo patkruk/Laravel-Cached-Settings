@@ -171,7 +171,7 @@ class DatabaseHandler implements PersistentHandlerInterface
                            ->where('key', '=', (string) $key)
                            ->count();
 
-        return ($result === 1) ? true : false;
+        return ($result == 1) ? true : false;
     }
 
     /**
