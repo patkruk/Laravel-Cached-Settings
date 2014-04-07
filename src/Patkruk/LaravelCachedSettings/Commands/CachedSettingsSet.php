@@ -46,17 +46,15 @@ class CachedSettingsSet extends Command
 	public function fire()
 	{
 		// get the "key" argument
-		if (! empty($this->argument('key'))) {
-			$key = $this->argument('key');
-		} else {
+		$key = $this->argument('key');
+		if (empty($key)) {
 			$this->line('');
 			$key = $this->ask('Setting name:');
 		}
 
 		// get the "value" argument
-		if (! empty($this->argument('value'))) {
-			$value = $this->argument('value');
-		} else {
+		$value = $this->argument('value');
+		if (empty($value)) {
 			$this->line('');
 			$value = $this->ask('Setting value:');
 		}
