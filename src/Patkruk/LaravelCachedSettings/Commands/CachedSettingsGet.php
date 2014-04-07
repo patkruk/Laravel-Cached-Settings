@@ -46,9 +46,8 @@ class CachedSettingsGet extends Command
     public function fire()
     {
         // get the "key" argument
-        if (! empty($this->argument('key'))) {
-            $key = $this->argument('key');
-        } else {
+        $key = $this->argument('key');
+        if (empty($key)) {
             $this->line('');
             $key = $this->ask('Setting name:');
         }
