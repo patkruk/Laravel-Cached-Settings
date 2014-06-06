@@ -99,9 +99,10 @@ class LaravelCachedSettings
      * Returns a setting.
      *
      * @param  string $key
+     * @param  string $default
      * @return string|false
      */
-    public function get($key)
+    public function get($key, $default = false)
     {
         // use cache if possible
         if (isset($this->cacheHandler) && $this->cacheHandler->has($key)) return $this->cacheHandler->get($key);
@@ -114,7 +115,7 @@ class LaravelCachedSettings
             return (string) $result->value;
         }
 
-        return false;
+        return $default;
     }
 
     /**

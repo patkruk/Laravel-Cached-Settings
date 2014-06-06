@@ -182,6 +182,27 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
+
+    public function testGetReturnsDefaultIfCannotBeFound()
+    {
+        $key = 'my_key';
+        $default = 'default_value';
+
+        $this->cacheHandler->shouldReceive('has')
+                           ->with($key)
+                           ->once()
+                           ->andReturn(false);
+
+        $this->persistentHandler->shouldReceive('get')
+                                ->with($key)
+                                ->once()
+                                ->andReturn(false);
+
+        $result = $this->cachedSettings->get($key, $default);
+
+        $this->assertEquals($result, $default);
+    }
+
     public function testDeleteRemovesKeyFromCacheAndPersistentStorage()
     {
         $key = 'my_key';

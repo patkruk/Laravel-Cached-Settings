@@ -78,6 +78,7 @@ CachedSettings::set('email.editor', 'editor@example.com');
 ```php
 CachedSettings::get('datetime_format');
 CachedSettings::get('email.editor');
+CachedSettings::get('email.host', 'default_value');
 ```
 
 ### Checking if a setting exists:
