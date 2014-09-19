@@ -139,13 +139,21 @@ CachedSettings::getKeys();
 
 This command returns an array of all keys currently stored in the database.
 
-### Getting all settings:
+### Getting all key and settings:
+
+```php
+CachedSettings::getKeysAndValues();
+```
+
+This command returns an associative array of all settings.
+
+### Getting all settings (table dump):
 
 ```php
 CachedSettings::getAll();
 ```
 
-This command returns an array of all settings (key-value objects).
+This command returns a dump of the entire table.
 
 ## Artisan Commands
 

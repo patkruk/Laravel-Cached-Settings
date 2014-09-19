@@ -417,4 +417,30 @@ class LaravelCachedSettingsTest extends PHPUnit_Framework_TestCase
 
         $this->cachedSettings->importFile($file);
     }
+
+    public function testGetKeysAndValuesReturnsAssociativeArrayOfKeysAndValues()
+    {
+        $setting1 = new StdClass();
+        $setting1->key = 'key1';
+        $setting1->value = 'value1';
+
+        $setting2 = new StdClass();
+        $setting2->key = 'key2';
+        $setting2->value = 'value2';
+
+        $settings = array($setting1, $setting2);
+
+        $this->persistentHandler->shouldReceive('getAll')
+                                ->once()
+                                ->andReturn($settings);
+
+        $result = $this->cachedSettings->getKeysAndValues();
+
+        $expectedResult = array(
+            'key1' => 'value1',
+            'key2' => 'value2'
+        );
+
+        $this->assertSame($expectedResult, $result);
+    }
 }
