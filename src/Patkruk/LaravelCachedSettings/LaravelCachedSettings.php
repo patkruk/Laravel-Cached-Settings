@@ -186,7 +186,7 @@ class LaravelCachedSettings
     }
 
     /**
-     * Updates all settings in cache withthe values from
+     * Updates all settings in cache with values from
      * the persistent storage for the current environment.
      *
      * @return boolean
@@ -218,8 +218,23 @@ class LaravelCachedSettings
     }
 
     /**
-     * Returns an array of all settings currently kept
-     * in the persistent storage for the current environment.
+     * Returns an associative array of all keys and values.
+     *
+     * @return array
+     */
+    public function getKeysAndValues()
+    {
+        $result = array();
+
+        foreach ($this->getAll() as $item) {
+            $result[$item->key] = $item->value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns a dump of the table.
      *
      * @return array
      */
