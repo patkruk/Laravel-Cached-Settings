@@ -10,7 +10,7 @@ The package uses the current environment name to oraganize settings in order to 
 
 One of the artisan commands the package offers, allows you to import a json file into the persistant storage system. See below for more info.
 
-Instalation
+Installation
 ===========
 
 Add the package to your composer.json file:
